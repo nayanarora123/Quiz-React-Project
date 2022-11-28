@@ -1,34 +1,46 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
+import { Link, useParams } from 'react-router-dom';
 
 function Bank(){
 
+    let param  = useParams();
+    let id = param.id;
+    if(!id){
+        id = 1;
+    };
+
     let quizQna = JSON.parse(localStorage.getItem('quizData'));
 
-    if (quizQna === null ) { quizQna = [] }
+    if (quizQna === null ) { quizQna = [] };
 
-
-    //for initial pages
-    let initialPages = quizQna.filter( val => {
-        return val.id <= 5
-    } )
-
-    const [ quizData, setQuizData ] = useState(initialPages);
+    //filter on display depend on params
+    let displayQues = quizQna.filter( val => {
+        if (id > Math.ceil(quizQna.length / 5)) {
+            id = 1;
+        }
+            let moreThan = id - 1;
+            return val.id <= id * 5 && val.id > moreThan * 5;
+    });
+    
+    const [ quizData, setQuizData ] = useState(displayQues);
 
     const active = (checkedId) => {
 
         let result = quizData.find( val => {
             if (checkedId === val.id) {
-                return val
+                return val;
+            } else { 
+                return null;
             }
         } );
         
-        let boolean = result.isActive;
+        let isTrue = result.isActive;
 
         //for state
         setQuizData( prevState => {
             return prevState.map( val => {
-                if (val.id === checkedId && val.isActive === boolean) {
-                    return { ...val,  isActive: !boolean };
+                if (val.id === checkedId && val.isActive === isTrue) {
+                    return { ...val,  isActive: !isTrue };
                 } else {
                     return val;
                 }
@@ -37,8 +49,8 @@ function Bank(){
 
         //for storage
         let updatedQuiz = quizQna.map( val => {
-            if (val.id === checkedId && val.isActive === boolean) {
-                return { ...val,  isActive: !boolean };
+            if (val.id === checkedId && val.isActive === isTrue) {
+                return { ...val,  isActive: !isTrue };
             } else {
                 return val;
             }
@@ -55,10 +67,13 @@ function Bank(){
         buttons.push(i);
     };
 
-    const nextPage = (lessThan, moreThan) => {
+    const nextPage = (lessThan) => {
+        let moreThan = lessThan - 1;
         let validPage = quizQna.filter( val => {
             if ( val.id <= lessThan * 5 && val.id > moreThan * 5 ) {
                 return val;
+            } else {
+                return null;
             }
         });
         setQuizData(validPage);
@@ -100,10 +115,11 @@ function Bank(){
                 </tbody>
             </table>
 
-
             <div className="pagination">
                 { buttons.map((val, ind) => {
-                    return <button key={ind} onClick={() => nextPage(val, val-1)} >{val}</button>
+                    return <Link key={ind} to={`/bank/${ind + 1}`}>
+                        <button onClick={() => nextPage(val)} >{val}</button>
+                        </Link>
                 }) }
             </div>
         </div>
@@ -111,3 +127,5 @@ function Bank(){
 };
 
 export default Bank;
+
+

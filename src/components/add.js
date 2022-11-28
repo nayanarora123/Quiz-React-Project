@@ -17,8 +17,18 @@ function Add(){
         opt2: '',
         opt3: '',
         opt4: '',
-        rightAns: ''
+        rightAns: '',
+        isActive: false
     });
+
+    const handleBoolean = (e) => {
+        e.preventDefault();
+        if (e.target.value === 'true') {
+            setIsDetails({...isDetails, isActive: true});
+        } else {
+            setIsDetails({...isDetails, isActive: false});
+        }
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,7 +45,7 @@ function Add(){
             ans3: isDetails.opt3,
             ans4: isDetails.opt4,
             rightAns: isDetails.rightAns,
-            isActive: false
+            isActive: isDetails.isActive
         };
 
         const quizQna = [...quizItem, newItem];
@@ -60,7 +70,8 @@ function Add(){
             opt2: '',
             opt3: '',
             opt4: '',
-            rightAns: ''
+            rightAns: '',
+            isActive: false
         } );
     }
 
@@ -105,6 +116,14 @@ function Add(){
                         <input type="text" name="rightAns" placeholder="Right Answer"
                         onChange={(e) => handleChange(e)} value={isDetails.rightAns}
                         ></input>
+                    </div>
+                    <div className="item">
+                        <label className="add">Active Status:</label>
+                            <select name="isActive" id="isActive" placeholder="Active Status"
+                             onChange={(e) => handleBoolean(e)} value={isDetails.isActive} >
+                              <option value={true}>True</option>
+                              <option value={false}>False</option>
+                            </select>
                     </div>
 
                     <button type="submit">ADD</button>

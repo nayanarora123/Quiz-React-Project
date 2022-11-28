@@ -15,7 +15,7 @@ function Result(){
             return val.value !== val.rightAns;
     })
 
-    const playAgain = () => {
+    const playAgain = () => {   
         localStorage.removeItem('userAns');
         nav('/');
     };

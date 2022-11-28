@@ -1,8 +1,14 @@
 import React, { useReducer } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function Form(){
+function Quiz(){
     let nav = useNavigate();
+
+    let params = useParams();
+    let paramId = params.questionNo;
+    if (!paramId){
+        paramId = 1;
+    }
 
     let quizQna = JSON.parse(localStorage.getItem('quizData'));
 
@@ -54,7 +60,7 @@ function Form(){
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleChange = (e) => {
-        return dispatch({event: 'initial', value: e.target.value});    
+        return dispatch({ event: 'initial', value: e.target.value });    
     };
 
 
@@ -88,7 +94,7 @@ function Form(){
             <h1 className="title">QUIZ GAME</h1>
 
             { state.quizQna.map((val, ind) => {
-                if (ind === state.id){
+                if (state.id === ind ){
 
             return <form key={ind} className="form-control" onSubmit={(e) => submitAns(e, val)}>
                 <h2 className="question">{val.question}</h2><hr></hr>
@@ -120,23 +126,11 @@ function Form(){
                     <button type="submit">Sumbit</button>
                 </div>
             </form>
-            }  
+            }  else { return null }
             }) }
 
         </div>
     );
 };
 
-export default Form;
-
-// let array = [{name: 'nayan'}, {name: 'mehak'}, {name:'aditi'}]
-
-// // let x = array.filter( (value, index) => {
-// //     return array[0];
-// // } )
-
-// // console.log(x);
-
-// let a = [array[0]]
-// console.log(a);
-
+export default Quiz;
